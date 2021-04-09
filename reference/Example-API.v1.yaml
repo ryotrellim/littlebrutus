@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Example API
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/devices/{deviceId}':
+    parameters:
+      - schema:
+          type: string
+        name: deviceId
+        in: path
+        required: true
+    get:
+      summary: Get Device Info by Device ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              examples:
+                example-1:
+                  value:
+                    id: 123456
+                    deviceName: string
+                    deviceType: type1
+        '404':
+          description: User Not Found
+      operationId: get-device-deviceID
+      description: Retrieve the information of the device with the matching device ID.
+    patch:
+      summary: Update Device Information
+      operationId: patch-device-deviceId
+      responses:
+        '200':
+          description: Device Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              examples: {}
+        '404':
+          description: User Not Found
+        '409':
+          description: Email Already Taken
+      description: Update the information of an existing device.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                deviceName:
+                  type: string
+                  minLength: 1
+                deviceType:
+                  type: string
+                  minLength: 1
+              required:
+                - deviceName
+                - deviceType
+            examples: {}
+        description: Patch device properties to update.
+components:
+  schemas:
+    Device:
+      title: Device
+      type: object
+      description: ''
+      x-examples:
+        Example 1:
+          id: 12345
+          deviceName: Device Foo
+          deviceType: type1
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+          format: int32
+        deviceName:
+          type: string
+        deviceType:
+          type: string
+          enum:
+            - type1
+            - type2
+      required:
+        - id
+        - deviceName
